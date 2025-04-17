@@ -1,5 +1,26 @@
 import React from 'react';
-import { placeholderUser } from '../../data/placeholderUser';
+
+const handleLogin = (username, password, set) => {
+    fetch('http://localhost:3000/login', {
+        method: 'post',
+        headers: {'Content-type': 'application/json'},
+        body: JSON.stringify({
+            username: username,
+            password: password
+        })
+    })
+        .then(response => response.json())
+        .then(data => {
+            if(data.user){
+                set(data.user);
+            } else {
+                alert('Invalid credentials');
+            }
+        })
+        .catch((e)=>{
+            alert('Error');
+        })
+}
 
 const Login = (props) => {
 
@@ -13,25 +34,12 @@ const Login = (props) => {
                     onClick={(e)=>{
                         e.preventDefault();
                         if(/[\w\.]{4,16}/.test(document.getElementById('user').value) && /[\w\.]{4,16}/.test(document.getElementById('pass').value)){
-                            let user = document.getElementById('user').value;
-                            let pass = document.getElementById('pass').value;
-                            let foundUser = false;
-                            placeholderUser.forEach(element => {
-                                if(element.username == user){
-                                    if(element.password == pass){
-                                        foundUser = true;
-                                        props.login(user);
-                                    }
-                                }
-                            });
-                            if(!foundUser)alert('Invalid credentials');
-                        }
-                        else{
+                            handleLogin(document.getElementById('user').value, document.getElementById('pass').value, props.login);
+                        } else {
                             alert('Invalid input');
                         }
-                        
                     }}>
-                Login
+                    Login
                 </button>
             </form>
         </div>
