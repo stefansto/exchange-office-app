@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
-import './App.css';
-import Header from './Header.jsx';
-import Currencies from './Currencies.jsx';
+import Header from './components/Header/Header.jsx';
+import Currencies from './components/Currencies/Currencies.jsx';
 import {curr} from './data/curr.jsx';
-import Footer from './Footer.jsx';
-import Login from './Login.jsx';
-import Input from './Input.jsx';
-import Output from './Output.jsx';
-import Exchange from './Exchange.jsx';
-import Modal from './Modal.jsx';
-import Transactions from './Transactions.jsx';
+import Footer from './components/Footer/Footer.jsx';
+import Login from './components/Login/Login.jsx';
+import Input from './components/Input/Input.jsx';
+import Output from './components/Output/Output.jsx';
+import Exchange from './components/Exchange/Exchange.jsx';
+import Modal from './components/Modal/Modal.jsx';
+import Transactions from './components/Transactions/Transactions.jsx';
 
 var pare = curr;
 

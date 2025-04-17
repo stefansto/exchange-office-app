@@ -1,5 +1,5 @@
 import React from 'react';
-import Currency from './Currency.jsx';
+import Currency from '../Currency/Currency.jsx';
 
 
 const Currencies = (props) => {

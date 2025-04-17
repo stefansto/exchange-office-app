@@ -1,5 +1,5 @@
 import React from 'react';
-import { placeholderUser } from './data/placeholderUser';
+import { placeholderUser } from '../../data/placeholderUser';
 
 const Login = (props) => {
 
