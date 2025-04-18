@@ -1,7 +1,7 @@
 import React from 'react';
 
-const handleLogin = (username, password, set) => {
-    fetch('http://localhost:3000/login', {
+const handleLogin = (username, password, set, API_URL) => {
+    fetch(`${API_URL}/login`, {
         method: 'post',
         headers: {'Content-type': 'application/json'},
         body: JSON.stringify({
@@ -18,7 +18,7 @@ const handleLogin = (username, password, set) => {
             }
         })
         .catch((e)=>{
-            alert('Error');
+            alert('Server error, please try again later!');
         })
 }
 
@@ -34,7 +34,7 @@ const Login = (props) => {
                     onClick={(e)=>{
                         e.preventDefault();
                         if(/[\w\.]{4,16}/.test(document.getElementById('user').value) && /[\w\.]{4,16}/.test(document.getElementById('pass').value)){
-                            handleLogin(document.getElementById('user').value, document.getElementById('pass').value, props.login);
+                            handleLogin(document.getElementById('user').value, document.getElementById('pass').value, props.login, props.API_URL);
                         } else {
                             alert('Invalid input');
                         }

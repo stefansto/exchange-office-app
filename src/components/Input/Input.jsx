@@ -3,15 +3,14 @@ import React from "react";
 const Input = (props) => {
 
     let newTransaction = {
-        id: null,
         type: "Input",
-        currIn: null,
-        ammountIn: null,
-        currOut: null,
-        ammountOut: 0,
-        rate: '/',
         date: null,
-        cashier: props.user
+        cashier: props.user,
+        currencyIn: null,
+        currencyInAmmount: null,
+        currencyOut: null,
+        currencyOutAmmount: null,
+        rate: null
     }
 
     let option = 0;
@@ -28,7 +27,7 @@ const Input = (props) => {
                         const el = e.target.childNodes[index];
                         option = el.getAttribute('id');
                         inputText = document.getElementById('inputText').value = 0;
-                        newTransaction.currIn = el.value;
+                        newTransaction.currencyIn = el.value;
                     }}
                 >
                     <option hidden disabled value='selected'>Choose:</option>
@@ -45,50 +44,57 @@ const Input = (props) => {
                     }}
                     className="border rounded-md p-1"/>
 
-                    <button 
-                        onClick={()=>{
-                            let errorInput = false;
-                            let errorList = [];
+                <button
+                    onClick={()=>{
+                        let errorInput = false;
+                        let errorList = [];
 
-                            if(/^\d*\.?\d*$/.exec(document.getElementById('inputText').value) && newTransaction.currIn){
-                                inputText = parseFloat(document.getElementById('inputText').value);
-                                if(inputText > 0){
-                                    newTransaction.ammountIn = inputText;
-                                    const newMoney = props.curr.map(x => {
-                                        if(x.id == option){
-                                            return {...x, ammount: x.ammount + inputText}
-                                        }else {
-                                            return {...x}
-                                        }
-                                    })
-            
-                                    let dateAndTime = new Date();
-                                    newTransaction.date = dateAndTime.getDate() +'/'+ (dateAndTime.getMonth()+1) +'/'+ dateAndTime.getFullYear() + '  ' + dateAndTime.getHours() + ':' + dateAndTime.getMinutes() + ':' + dateAndTime.getSeconds();
-                                    newTransaction.id = crypto.randomUUID();
-                                    props.setMoney(newMoney);
-                                    props.setTransactions(newTransaction);
+                        if(/^\d*\.?\d*$/.exec(document.getElementById('inputText').value) && newTransaction.currencyIn){
+                            inputText = parseFloat(document.getElementById('inputText').value);
+                            if(inputText > 0){
+                                newTransaction.currencyInAmmount = inputText;
+                                let dateAndTime = new Date();
+                                newTransaction.date = dateAndTime.getDate() +'/'+ (dateAndTime.getMonth()+1) +'/'+ dateAndTime.getFullYear() + '  ' + dateAndTime.getHours() + ':' + dateAndTime.getMinutes() + ':' + dateAndTime.getSeconds();
+                                fetch(`${props.API_URL}/transaction`, {
+                                    method: 'put',
+                                    headers: {'Content-type': 'application/json'},
+                                    body: JSON.stringify(newTransaction)
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if(data.message === 'Error'){
+                                        alert('Database error');
+                                    }
+                                    props.refreshData();
+                                })
+                                .catch((e)=>{
+                                    alert('Server error, please try again later!');
+                                })
+                                .finally(()=>{
                                     props.onClose();
-                                }
-                                else{
-                                    errorInput = true;
-                                    errorList.push('Can\'t input a zero! ');
-                                }
+                                })
                             }
                             else{
                                 errorInput = true;
-                                errorList.push('Invalid input! ');
+                                errorList.push('Can\'t input a zero! ');
                             }
-                            
-                            if(errorInput){
-                                let txt = '';
-                                errorList.forEach((x)=>{
-                                    txt += x;
-                                });
-                                alert(txt);
-                            }
+                        }
+                        else{
+                            errorInput = true;
+                            errorList.push('Invalid input! ');
+                        }
+                        
+                        if(errorInput){
+                            let txt = '';
+                            errorList.forEach((x)=>{
+                                txt += x;
+                            });
+                            alert(txt);
+                        }
                     }} 
-                    className="m-5 border rounded-md w-20 h-10 hover:bg-green-900 cursor-pointer">Input</button>
-                
+                    className="m-5 border rounded-md w-20 h-10 hover:bg-green-900 cursor-pointer">
+                    Input
+                </button>
             </div>
         </>
     );

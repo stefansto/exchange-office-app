@@ -9,6 +9,8 @@ import Exchange from './components/Exchange/Exchange.jsx';
 import Modal from './components/Modal/Modal.jsx';
 import Transactions from './components/Transactions/Transactions.jsx';
 
+const API_URL = 'http://localhost:3000';
+
 function App() {
   const [isLogged, setIsLogged] = useState(null);
 
@@ -25,11 +27,11 @@ function App() {
   const [error, setError] = useState(false);
   
   if(!isLogged) {
-    return(<div className='pt-20 justify-center flex'><Login login={(x)=>setIsLogged(x)}/></div>);
+    return(<div className='pt-20 justify-center flex'><Login login={(x)=>setIsLogged(x)} API_URL={API_URL} /></div>);
   } else {
     if(!money && !moneyLoading){
       setMoneyLoading(true);
-      fetch('http://localhost:3000/currency', {
+      fetch(`${API_URL}/currency`, {
         method: 'get',
         headers: {'Content-type': 'application/json'},
       })
@@ -46,7 +48,7 @@ function App() {
     }
     if(!transactions && !transactionsLoading){
       setTransactionsLoading(true);
-      fetch('http://localhost:3000/transaction', {
+      fetch(`${API_URL}/transaction`, {
         method: 'get',
         headers: {'Content-type': 'application/json'},
       })
@@ -94,15 +96,15 @@ function App() {
         </div>
         
         <Modal open={openExchange} onClose={()=>setOpenExchange(false)}>
-          <Exchange curr={money} user={isLogged} setMoney={(x)=>setMoney(x)} onClose={()=>setOpenExchange(false)} setTransactions={(x)=>setTransactions(transactions.concat(x))} />
+          <Exchange curr={money} user={isLogged} refreshData={()=>{setMoney(null); setTransactions(null);}} onClose={()=>setOpenExchange(false)} API_URL={API_URL} />
         </Modal>
         
         <Modal open={openImport} onClose={()=>setOpenImport(false)}>
-          <Input curr={money} user={isLogged} setMoney={(x)=>setMoney(x)} onClose={()=>setOpenImport(false)} setTransactions={(x)=>{setTransactions([...transactions, x])}} /> 
+          <Input curr={money} user={isLogged} refreshData={()=>{setMoney(null); setTransactions(null);}} onClose={()=>setOpenImport(false)} API_URL={API_URL} />
         </Modal>
         
         <Modal open={openOutput} onClose={()=>setOpenOutput(false)}>
-          <Output curr={money} user={isLogged} setMoney={(x)=>setMoney(x)} onClose={()=>setOpenOutput(false)} setTransactions={(x)=>setTransactions(transactions.concat(x))} />
+          <Output curr={money} user={isLogged} refreshData={()=>{setMoney(null); setTransactions(null);}} onClose={()=>setOpenOutput(false)} API_URL={API_URL} />
         </Modal>
       </>
     );
