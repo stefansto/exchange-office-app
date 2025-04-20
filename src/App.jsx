@@ -24,6 +24,8 @@ function App() {
   const [transactions, setTransactions] = useState(null);
   const [transactionsLoading, setTransactionsLoading] = useState(false);
 
+  const [isSorted, setIsSorted] = useState(null);
+
   const [error, setError] = useState(false);
   
   if(!isLogged) {
@@ -86,7 +88,7 @@ function App() {
             <p>loading transactions</p> : 
             <div className='min-h-100'>
               <div className='flex justify-around mt-10 '>
-                <Transactions transactions={transactions} />
+                <Transactions transactions={transactions} isSorted={isSorted} setIsSorted={(x)=>{setIsSorted(x)}}/>
               </div>
             </div>
         }
@@ -96,15 +98,15 @@ function App() {
         </div>
         
         <Modal open={openExchange} onClose={()=>setOpenExchange(false)}>
-          <Exchange curr={money} user={isLogged} refreshData={()=>{setMoney(null); setTransactions(null);}} onClose={()=>setOpenExchange(false)} API_URL={API_URL} />
+          <Exchange curr={money} user={isLogged} refreshData={()=>{setMoney(null); setTransactions(null); setIsSorted(null)}} onClose={()=>setOpenExchange(false)} API_URL={API_URL} />
         </Modal>
         
         <Modal open={openImport} onClose={()=>setOpenImport(false)}>
-          <Input curr={money} user={isLogged} refreshData={()=>{setMoney(null); setTransactions(null);}} onClose={()=>setOpenImport(false)} API_URL={API_URL} />
+          <Input curr={money} user={isLogged} refreshData={()=>{setMoney(null); setTransactions(null); setIsSorted(null)}} onClose={()=>setOpenImport(false)} API_URL={API_URL} />
         </Modal>
         
         <Modal open={openOutput} onClose={()=>setOpenOutput(false)}>
-          <Output curr={money} user={isLogged} refreshData={()=>{setMoney(null); setTransactions(null);}} onClose={()=>setOpenOutput(false)} API_URL={API_URL} />
+          <Output curr={money} user={isLogged} refreshData={()=>{setMoney(null); setTransactions(null); setIsSorted(null)}} onClose={()=>setOpenOutput(false)} API_URL={API_URL} />
         </Modal>
       </>
     );
