@@ -88,7 +88,7 @@ function App() {
             <p>loading transactions</p> : 
             <div className='min-h-100'>
               <div className='flex justify-around mt-10 '>
-                <Transactions transactions={transactions} isSorted={isSorted} setIsSorted={(x)=>{setIsSorted(x)}}/>
+                <Transactions transactions={transactions} setTransactions={(x)=>{setTransactions(x)}} isSorted={isSorted} setIsSorted={(x)=>{setIsSorted(x)}} currencies={money} API_URL={API_URL}/>
               </div>
             </div>
         }

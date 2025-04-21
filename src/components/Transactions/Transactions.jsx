@@ -1,5 +1,6 @@
 import React from "react";
 import { sortCashier, sortDateTime, sortID, sortInput, sortOutput, sortRate, sortType } from "./transactionSortingFunctions";
+import Filter from "../Filter/Filter";
 
 
 const Transactions = (props) => {
@@ -15,6 +16,7 @@ const Transactions = (props) => {
     
     return(
         <>
+            <Filter currencies={props.currencies} setTransactions={props.setTransactions} setIsSorted={props.setIsSorted} API_URL={props.API_URL} />
             <div className="center flex justify-content w-150 m-2 mb-25">
                 <table className="border w-900">
                     <thead>
