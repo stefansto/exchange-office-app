@@ -13,6 +13,8 @@ Application meant to be used by cashiers in an exchange office.
 - Table of successful transactions
 - Footer that displays currently logged in worker
 - Currency and Transaction data is fetched from the API using a GET request
+- Sorting transactions in ascending or descending order done locally by clicking the table header of the column by which you want to sort data
+- Filtering transactions by sending selected parameters to the API and displaying the data recieved back
 
 ## Backend Repository
 
