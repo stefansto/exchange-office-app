@@ -20,6 +20,10 @@ Application meant to be used by cashiers in an exchange office.
 
 - https://github.com/stefansto/exchange-office-api
 
-## Notes
+## Usage
 
-- Put your url for the API in 'API_URL' const in 'App.jsx'
+- Clone the repository and run `npm install`
+- Make a `.env` file in root, there is an example file of it in the repository
+- Need to have the API from the backend repository running
+- Put the url for the API in `VITE_EXCHANGE_APP_API_URL` variable in the `.env` file
+- Start the app with `npm run dev`
