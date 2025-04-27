@@ -16,7 +16,7 @@ const Transactions = (props) => {
     
     return(
         <>
-            <Filter currencies={props.currencies} setTransactions={props.setTransactions} setIsSorted={props.setIsSorted} API_URL={props.API_URL} />
+            <Filter currencies={props.currencies} setTransactions={props.setTransactions} setIsSorted={props.setIsSorted} />
             <div className='min-h-100'>
                 <div className='flex justify-around mt-10 '>
                     <div className="center flex justify-content w-200 m-2 mb-25">

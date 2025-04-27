@@ -77,7 +77,7 @@ const Output = (props) => {
                         else{
                             let dateAndTime = new Date();
                             newTransaction.date = dateAndTime.getDate() +'/'+ (dateAndTime.getMonth()+1) +'/'+ dateAndTime.getFullYear() + '  ' + dateAndTime.getHours() + ':' + dateAndTime.getMinutes() + ':' + dateAndTime.getSeconds();
-                            fetch(`${props.API_URL}/transaction`, {
+                            fetch(`${import.meta.env.VITE_EXCHANGE_APP_API_URL}/transaction`, {
                                 method: 'put',
                                 headers: {'Content-type': 'application/json'},
                                 body: JSON.stringify(newTransaction)

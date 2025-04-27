@@ -9,7 +9,6 @@ import Exchange from './components/Exchange/Exchange.jsx';
 import Modal from './components/Modal/Modal.jsx';
 import Transactions from './components/Transactions/Transactions.jsx';
 
-const API_URL = 'http://localhost:3000';
 
 function App() {
   const [isLogged, setIsLogged] = useState(null);
@@ -29,11 +28,11 @@ function App() {
   const [error, setError] = useState(false);
   
   if(!isLogged) {
-    return(<div className='pt-20 justify-center flex'><Login login={(x)=>setIsLogged(x)} API_URL={API_URL} /></div>);
+    return(<div className='pt-20 justify-center flex'><Login login={(x)=>setIsLogged(x)} /></div>);
   } else {
     if(!money && !moneyLoading){
       setMoneyLoading(true);
-      fetch(`${API_URL}/currency`, {
+      fetch(`${import.meta.env.VITE_EXCHANGE_APP_API_URL}/currency`, {
         method: 'get',
         headers: {'Content-type': 'application/json'},
       })
@@ -50,7 +49,7 @@ function App() {
     }
     if(!transactions && !transactionsLoading){
       setTransactionsLoading(true);
-      fetch(`${API_URL}/transaction`, {
+      fetch(`${import.meta.env.VITE_EXCHANGE_APP_API_URL}/transaction`, {
         method: 'get',
         headers: {'Content-type': 'application/json'},
       })
@@ -86,7 +85,7 @@ function App() {
         {
           transactionsLoading ? 
             <p>loading transactions</p> : 
-            <Transactions transactions={transactions} setTransactions={(x)=>{setTransactions(x)}} isSorted={isSorted} setIsSorted={(x)=>{setIsSorted(x)}} currencies={money} API_URL={API_URL}/>
+            <Transactions transactions={transactions} setTransactions={(x)=>{setTransactions(x)}} isSorted={isSorted} setIsSorted={(x)=>{setIsSorted(x)}} currencies={money} />
         }
 
         <div className='fixed bottom-0 w-screen bg-slate-950'>
@@ -94,15 +93,15 @@ function App() {
         </div>
         
         <Modal open={openExchange} onClose={()=>setOpenExchange(false)}>
-          <Exchange curr={money} user={isLogged} refreshData={()=>{setMoney(null); setTransactions(null); setIsSorted(null)}} onClose={()=>setOpenExchange(false)} API_URL={API_URL} />
+          <Exchange curr={money} user={isLogged} refreshData={()=>{setMoney(null); setTransactions(null); setIsSorted(null)}} onClose={()=>setOpenExchange(false)} />
         </Modal>
         
         <Modal open={openImport} onClose={()=>setOpenImport(false)}>
-          <Input curr={money} user={isLogged} refreshData={()=>{setMoney(null); setTransactions(null); setIsSorted(null)}} onClose={()=>setOpenImport(false)} API_URL={API_URL} />
+          <Input curr={money} user={isLogged} refreshData={()=>{setMoney(null); setTransactions(null); setIsSorted(null)}} onClose={()=>setOpenImport(false)} />
         </Modal>
         
         <Modal open={openOutput} onClose={()=>setOpenOutput(false)}>
-          <Output curr={money} user={isLogged} refreshData={()=>{setMoney(null); setTransactions(null); setIsSorted(null)}} onClose={()=>setOpenOutput(false)} API_URL={API_URL} />
+          <Output curr={money} user={isLogged} refreshData={()=>{setMoney(null); setTransactions(null); setIsSorted(null)}} onClose={()=>setOpenOutput(false)} />
         </Modal>
       </>
     );

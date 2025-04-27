@@ -1,7 +1,7 @@
 import React from "react";
 
-const handleFilterSubmit = ( checkedArray , setFilter, setSort, API_URL) => {
-    fetch(`${API_URL}/filter`, {
+const handleFilterSubmit = ( checkedArray , setFilter, setSort ) => {
+    fetch(`${import.meta.env.VITE_EXCHANGE_APP_API_URL}/filter`, {
         method: 'post',
         headers: {'Content-type': 'application/json'},
         body: JSON.stringify({
@@ -20,7 +20,7 @@ const handleFilterSubmit = ( checkedArray , setFilter, setSort, API_URL) => {
     })
 }
 
-const Filter = ({currencies, setTransactions, setIsSorted, API_URL}) => {
+const Filter = ({currencies, setTransactions, setIsSorted}) => {
     return(
         <>
             <div className="m-5 flex justify-around">
@@ -29,17 +29,18 @@ const Filter = ({currencies, setTransactions, setIsSorted, API_URL}) => {
                         <div className="items-center w-50 p-2 border text-center rounded-lg">
                             <p>Currency In</p>
                             {
-                                currencies.map((currency, currencyKey)=>{
-                                    return(<div key={currencyKey}><input type="checkbox" value={currency.name} name="currencyIn" /><label htmlFor="currencyIn">{currency.name}</label></div>)
-                                })
+                                currencies ?
+                                    currencies.map((currency, currencyKey)=>{
+                                        return(<div key={currencyKey}><input type="checkbox" value={currency.name} name="currencyIn" /><label htmlFor="currencyIn">{currency.name}</label></div>)
+                                    }) : <p>Error loading currencies!</p>
                             }
                         </div>
                         <div className="items-center w-50 p-2 border text-center rounded-lg">
                             <p>Currency Out</p>
-                            {
-                                currencies.map((currency, currencyKey)=>{
-                                    return(<div key={currencyKey}><input type="checkbox" value={currency.name} name="currencyOut" /><label htmlFor="currencyOut">{currency.name}</label></div>)
-                                })
+                            {   currencies ?
+                                    currencies.map((currency, currencyKey)=>{
+                                        return(<div key={currencyKey}><input type="checkbox" value={currency.name} name="currencyOut" /><label htmlFor="currencyOut">{currency.name}</label></div>)
+                                    }) : <p>Error loading currencies!</p>
                             }
                         </div>
 
@@ -88,7 +89,7 @@ const Filter = ({currencies, setTransactions, setIsSorted, API_URL}) => {
                                     if(checkedElemenets.length)request.type = checkedElemenets;
 
                                     if(Object.keys(request).length){
-                                        handleFilterSubmit(request, setTransactions, setIsSorted, API_URL);
+                                        handleFilterSubmit(request, setTransactions, setIsSorted);
                                     } else {
                                         alert('Unspecified filter parametars')
                                     }
