@@ -13,19 +13,18 @@ const Input = (props) => {
         rate: null
     }
 
-    let option = 0;
     let inputText = 0;
 
     return(
         <>
             <div className="w-full h-full">
                 <select 
+                    id="select_input"
                     className='w-50 m-5 p-1 border rounded-md'
                     defaultValue={'selected'}
                     onChange={(e)=>{
                         const index = e.target.selectedIndex;
                         const el = e.target.childNodes[index];
-                        option = el.getAttribute('id');
                         inputText = document.getElementById('inputText').value = 0;
                         newTransaction.currencyIn = el.value;
                     }}
@@ -38,11 +37,15 @@ const Input = (props) => {
                         }
                 </select>
                     
-                <input type="text" placeholder="Ammount" id="inputText" 
+                <input
+                    type="text" 
+                    placeholder="Ammount" 
+                    id="inputText"
+                    className="border rounded-md p-1"
                     onClick={()=>{
                         document.getElementById('inputText').select();
                     }}
-                    className="border rounded-md p-1"/>
+                />
 
                 <button
                     onClick={()=>{
@@ -55,17 +58,23 @@ const Input = (props) => {
                                 newTransaction.currencyInAmmount = inputText;
                                 let dateAndTime = new Date();
                                 newTransaction.date = dateAndTime.getDate() +'/'+ (dateAndTime.getMonth()+1) +'/'+ dateAndTime.getFullYear() + '  ' + dateAndTime.getHours() + ':' + dateAndTime.getMinutes() + ':' + dateAndTime.getSeconds();
-                                fetch(`${import.meta.env.VITE_EXCHANGE_APP_API_URL}/transaction`, {
-                                    method: 'put',
+                                fetch(`${import.meta.env.VITE_EXCHANGE_APP_API_URL}/transactions/new`, {
+                                    method: 'PUT',
                                     headers: {'Content-type': 'application/json'},
+                                    credentials: 'include',
                                     body: JSON.stringify(newTransaction)
                                 })
                                 .then(response => response.json())
                                 .then(data => {
-                                    if(data.message === 'Error'){
+                                    if(data.message && data.message === 'Error'){
                                         alert('Database error');
+                                    } else if(data.expiredToken && data.expiredToken === true){
+                                        alert('Token expired');
+                                        props.setIsLogged(null);
+                                    } else {
+                                        alert('Success!');
+                                        props.refreshData();
                                     }
-                                    props.refreshData();
                                 })
                                 .catch((e)=>{
                                     alert('Server error, please try again later!');
@@ -73,13 +82,11 @@ const Input = (props) => {
                                 .finally(()=>{
                                     props.onClose();
                                 })
-                            }
-                            else{
+                            } else {
                                 errorInput = true;
                                 errorList.push('Can\'t input a zero! ');
                             }
-                        }
-                        else{
+                        } else {
                             errorInput = true;
                             errorList.push('Invalid input! ');
                         }

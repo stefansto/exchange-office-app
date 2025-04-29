@@ -21,7 +21,7 @@ const Exchange = (props) => {
         <>
             <div className="">
                 <div className="w-full">
-                    <label className="w-1/6">From:</label>
+                    <label className="w-1/6" htmlFor="select_ex_out">From:</label>
                     <select 
                         onChange={(e)=>{
                             const index = e.target.selectedIndex;
@@ -30,6 +30,7 @@ const Exchange = (props) => {
                         }} 
                         className='w-40 m-5 p-1 border rounded-md'
                         defaultValue={'defaultSelectValueFrom'}
+                        id="select_ex_out"
                     >
                         <option className="block px-4 py-2 text-sm text-white bg-gray-900" id="0" hidden disabled value='defaultSelectValueFrom'>Choose:</option>
                         {
@@ -39,7 +40,7 @@ const Exchange = (props) => {
                         }
                     </select>
 
-                    <label className="w-1/6">To:</label>
+                    <label className="w-1/6" htmlFor="select_ex_in">To:</label>
                     <select 
                         onChange={(e)=>{
                             const index = e.target.selectedIndex;
@@ -47,6 +48,7 @@ const Exchange = (props) => {
                         }} 
                         className='w-40 m-5 p-1 border rounded-md'
                         defaultValue={'defaultSelectValueTo'}
+                        id="select_ex_in"
                     >
                         <option className="block px-4 py-2 text-sm text-white bg-gray-900" hidden disabled value='defaultSelectValueTo'>Choose:</option>
                         {
@@ -58,11 +60,11 @@ const Exchange = (props) => {
                 </div>
                 <div className="flex justify-around p-2">
                     <div>
-                        <label className="">Ammount:</label>
+                        <label htmlFor="ammountText">Ammount:</label>
                         <input className="border rounded-md p-1 w-30 m-2" type="text" placeholder='Ammount' id="ammountText" />
                     </div>
                     <div>
-                        <label className="">Rate:</label>
+                        <label htmlFor="rate">Rate:</label>
                         <input className="border rounded-md p-1 w-30 m-2" type="text" placeholder="Rate" id="rate" />
                     </div>
                 </div>
@@ -106,15 +108,19 @@ const Exchange = (props) => {
                             newTransaction.date = dateAndTime.getDate() +'/'+ (dateAndTime.getMonth()+1) +'/'+ dateAndTime.getFullYear() + '  ' + dateAndTime.getHours() + ':' + dateAndTime.getMinutes() + ':' + dateAndTime.getSeconds();
                             newTransaction.currencyInAmmount = (ammountText * rate);
                             newTransaction.currencyOutAmmount = ammountText;
-                            fetch(`${import.meta.env.VITE_EXCHANGE_APP_API_URL}/transaction`, {
-                                method: 'put',
+                            fetch(`${import.meta.env.VITE_EXCHANGE_APP_API_URL}/transactions/new`, {
+                                method: 'PUT',
                                 headers: {'Content-type': 'application/json'},
+                                credentials: 'include',
                                 body: JSON.stringify(newTransaction)
                             })
                             .then(response => response.json())
                             .then(data => {
-                                if(data.message === 'Error'){
-                                alert('Database error');
+                                if(data.message && data.message === 'Error'){
+                                    alert('Database error');
+                                } else if(data.expiredToken){
+                                    alert('Token expired!');
+                                    props.setIsLogged(null);
                                 } else {
                                     alert('Successfully added: ' + newTransaction.currencyInAmmount + ' ' + newTransaction.currencyIn);
                                     props.refreshData();

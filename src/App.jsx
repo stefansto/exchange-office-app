@@ -26,19 +26,28 @@ function App() {
   const [isSorted, setIsSorted] = useState(null);
 
   const [error, setError] = useState(false);
-  
+
   if(!isLogged) {
-    return(<div className='pt-20 justify-center flex'><Login login={(x)=>setIsLogged(x)} /></div>);
+    return(
+      <div className='pt-20 justify-center flex'>
+        <Login login={(x)=>setIsLogged(x)} />
+      </div>
+    );
   } else {
     if(!money && !moneyLoading){
       setMoneyLoading(true);
-      fetch(`${import.meta.env.VITE_EXCHANGE_APP_API_URL}/currency`, {
-        method: 'get',
+      fetch(`${import.meta.env.VITE_EXCHANGE_APP_API_URL}/currencies`, {
+        method: 'GET',
         headers: {'Content-type': 'application/json'},
+        credentials: 'include'
       })
         .then(response => response.json())
         .then(data => {
-          setMoney(data.res.currencies);
+          if(data.expiredToken){
+            setIsLogged(null);
+          } else {
+            setMoney(data.res.currencies);
+          }
         })
         .catch((e)=>{
           console.log('Error fetching data');
@@ -49,13 +58,18 @@ function App() {
     }
     if(!transactions && !transactionsLoading){
       setTransactionsLoading(true);
-      fetch(`${import.meta.env.VITE_EXCHANGE_APP_API_URL}/transaction`, {
-        method: 'get',
+      fetch(`${import.meta.env.VITE_EXCHANGE_APP_API_URL}/transactions`, {
+        method: 'GET',
         headers: {'Content-type': 'application/json'},
+        credentials: 'include'
       })
         .then(response => response.json())
         .then(data => {
-          setTransactions(data.res.transactions);
+          if(data.expiredToken){
+            setIsLogged(null);
+          } else {
+            setTransactions(data.res.transactions);
+          }
         })
         .catch((e)=>{
           console.log('Error fetching data');
@@ -85,7 +99,14 @@ function App() {
         {
           transactionsLoading ? 
             <p>loading transactions</p> : 
-            <Transactions transactions={transactions} setTransactions={(x)=>{setTransactions(x)}} isSorted={isSorted} setIsSorted={(x)=>{setIsSorted(x)}} currencies={money} />
+            <Transactions 
+              transactions={transactions} 
+              setTransactions={(x)=>{setTransactions(x)}} 
+              isSorted={isSorted} 
+              setIsSorted={(x)=>{setIsSorted(x)}} 
+              currencies={money} 
+              setIsLogged={(x)=>setIsLogged(x)} 
+            />
         }
 
         <div className='fixed bottom-0 w-screen bg-slate-950'>
@@ -93,19 +114,37 @@ function App() {
         </div>
         
         <Modal open={openExchange} onClose={()=>setOpenExchange(false)}>
-          <Exchange curr={money} user={isLogged} refreshData={()=>{setMoney(null); setTransactions(null); setIsSorted(null)}} onClose={()=>setOpenExchange(false)} />
+          <Exchange 
+            curr={money} 
+            user={isLogged} 
+            refreshData={()=>{setMoney(null); setTransactions(null); setIsSorted(null)}} 
+            onClose={()=>setOpenExchange(false)} 
+            setIsLogged={(x)=>setIsLogged(x)} 
+          />
         </Modal>
         
         <Modal open={openImport} onClose={()=>setOpenImport(false)}>
-          <Input curr={money} user={isLogged} refreshData={()=>{setMoney(null); setTransactions(null); setIsSorted(null)}} onClose={()=>setOpenImport(false)} />
+          <Input 
+            curr={money} 
+            user={isLogged} 
+            refreshData={()=>{setMoney(null); setTransactions(null); setIsSorted(null)}} 
+            onClose={()=>setOpenImport(false)} 
+            setIsLogged={(x)=>setIsLogged(x)} 
+          />
         </Modal>
         
         <Modal open={openOutput} onClose={()=>setOpenOutput(false)}>
-          <Output curr={money} user={isLogged} refreshData={()=>{setMoney(null); setTransactions(null); setIsSorted(null)}} onClose={()=>setOpenOutput(false)} />
+          <Output 
+            curr={money} 
+            user={isLogged} 
+            refreshData={()=>{setMoney(null); setTransactions(null); setIsSorted(null)}} 
+            onClose={()=>setOpenOutput(false)} 
+            setIsLogged={(x)=>setIsLogged(x)} 
+          />
         </Modal>
       </>
     );
   }
 }
 
-export default App
+export default App;

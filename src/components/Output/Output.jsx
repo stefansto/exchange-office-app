@@ -19,6 +19,7 @@ const Output = (props) => {
         <>
             <div className='output'>
                 <select
+                    id="select_output"
                     className='w-50 m-5 p-1 border rounded-md'
                     defaultValue='selected'
                     onChange={(e)=>{
@@ -35,11 +36,15 @@ const Output = (props) => {
                     }
                 </select>
 
-                <input required type='text' placeholder='Ammount' id='outputText'
+                <input
+                    required type='text'
+                    placeholder='Ammount'
+                    id='outputText'
+                    className="border rounded-md p-1"
                     onClick={()=>{
                         document.getElementById('outputText').select();
                     }} 
-                    className="border rounded-md p-1" />
+                />
 
                 <button 
                     onClick={()=>{
@@ -77,17 +82,23 @@ const Output = (props) => {
                         else{
                             let dateAndTime = new Date();
                             newTransaction.date = dateAndTime.getDate() +'/'+ (dateAndTime.getMonth()+1) +'/'+ dateAndTime.getFullYear() + '  ' + dateAndTime.getHours() + ':' + dateAndTime.getMinutes() + ':' + dateAndTime.getSeconds();
-                            fetch(`${import.meta.env.VITE_EXCHANGE_APP_API_URL}/transaction`, {
-                                method: 'put',
+                            fetch(`${import.meta.env.VITE_EXCHANGE_APP_API_URL}/transactions/new`, {
+                                method: 'PUT',
                                 headers: {'Content-type': 'application/json'},
+                                credentials: 'include',
                                 body: JSON.stringify(newTransaction)
                             })
                             .then(response => response.json())
                             .then(data => {
-                                if(data.message === 'Error'){
+                                if(data.message && data.message === 'Error'){
                                     alert('Database error');
+                                } else if(data.expiredToken){
+                                    alert('Token expired!');
+                                    props.setIsLogged(null);
+                                } else {
+                                    alert('Success!');
+                                    props.refreshData();
                                 }
-                                props.refreshData();
                             })
                             .catch((e)=>{
                                 alert('Server error, please try again later!');

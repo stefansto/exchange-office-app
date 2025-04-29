@@ -2,8 +2,9 @@ import React from 'react';
 
 const handleLogin = (username, password, set) => {
     fetch(`${import.meta.env.VITE_EXCHANGE_APP_API_URL}/login`, {
-        method: 'post',
+        method: 'POST',
         headers: {'Content-type': 'application/json'},
+        credentials: 'include',
         body: JSON.stringify({
             username: username,
             password: password

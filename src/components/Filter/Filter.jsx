@@ -1,9 +1,10 @@
 import React from "react";
 
 const handleFilterSubmit = ( checkedArray , setFilter, setSort ) => {
-    fetch(`${import.meta.env.VITE_EXCHANGE_APP_API_URL}/filter`, {
-        method: 'post',
+    fetch(`${import.meta.env.VITE_EXCHANGE_APP_API_URL}/transactions/filtered`, {
+        method: 'POST',
         headers: {'Content-type': 'application/json'},
+        credentials: 'include',
         body: JSON.stringify({
             checked: checkedArray
         })
@@ -31,7 +32,7 @@ const Filter = ({currencies, setTransactions, setIsSorted}) => {
                             {
                                 currencies ?
                                     currencies.map((currency, currencyKey)=>{
-                                        return(<div key={currencyKey}><input type="checkbox" value={currency.name} name="currencyIn" /><label htmlFor="currencyIn">{currency.name}</label></div>)
+                                        return(<div key={currencyKey}><input type="checkbox" value={currency.name} name="currencyIn" id={'currencyIn_'+currency.name}/><label htmlFor={'currencyIn_'+currency.name}>{currency.name}</label></div>)
                                     }) : <p>Error loading currencies!</p>
                             }
                         </div>
@@ -39,16 +40,16 @@ const Filter = ({currencies, setTransactions, setIsSorted}) => {
                             <p>Currency Out</p>
                             {   currencies ?
                                     currencies.map((currency, currencyKey)=>{
-                                        return(<div key={currencyKey}><input type="checkbox" value={currency.name} name="currencyOut" /><label htmlFor="currencyOut">{currency.name}</label></div>)
+                                        return(<div key={currencyKey}><input type="checkbox" value={currency.name} name="currencyOut" id={'currencyOut_'+currency.name}/><label htmlFor={'currencyOut_'+currency.name}>{currency.name}</label></div>)
                                     }) : <p>Error loading currencies!</p>
                             }
                         </div>
 
                         <div className="items-center w-50 p-2 border text-center rounded-lg">
                             <p>Transaction Type</p>
-                            <div><input type="checkbox" value="Exchange" name="type" /><label htmlFor="type">Exchange</label></div>
-                            <div><input type="checkbox" value="Input" name="type" /><label htmlFor="type">Input</label></div>
-                            <div><input type="checkbox" value="Output" name="type" /><label htmlFor="type">Output</label></div>
+                            <div><input type="checkbox" value="Exchange" name="type" id="type_ex"/><label htmlFor="type_ex">Exchange</label></div>
+                            <div><input type="checkbox" value="Input" name="type" id="type_in"/><label htmlFor="type_in">Input</label></div>
+                            <div><input type="checkbox" value="Output" name="type" id="type_out"/><label htmlFor="type_out">Output</label></div>
                         </div>
 
                     </div>
