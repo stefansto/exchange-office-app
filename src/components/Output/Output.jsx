@@ -90,14 +90,16 @@ const Output = (props) => {
                             })
                             .then(response => response.json())
                             .then(data => {
-                                if(data.message && data.message === 'Error'){
-                                    alert('Database error');
+                                if(data.errorMessage){
+                                    alert(data.errorMessage);
                                 } else if(data.expiredToken){
                                     alert('Token expired!');
                                     props.setIsLogged(null);
-                                } else {
-                                    alert('Success!');
+                                } else if(data.message){
+                                    alert(data.message);
                                     props.refreshData();
+                                } else {
+                                    throw Error;
                                 }
                             })
                             .catch((e)=>{

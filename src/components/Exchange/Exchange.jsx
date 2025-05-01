@@ -116,14 +116,16 @@ const Exchange = (props) => {
                             })
                             .then(response => response.json())
                             .then(data => {
-                                if(data.message && data.message === 'Error'){
-                                    alert('Database error');
+                                if(data.errorMessage){
+                                    alert(data.errorMessage);
                                 } else if(data.expiredToken){
                                     alert('Token expired!');
                                     props.setIsLogged(null);
-                                } else {
+                                } else if(data.message){
                                     alert('Successfully added: ' + newTransaction.currencyInAmmount + ' ' + newTransaction.currencyIn);
                                     props.refreshData();
+                                } else {
+                                    throw Error;
                                 }
                             })
                             .catch((e)=>{

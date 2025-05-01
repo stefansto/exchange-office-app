@@ -1,6 +1,6 @@
 import React from "react";
 
-const handleFilterSubmit = ( checkedArray , setFilter, setSort ) => {
+const handleFilterSubmit = ( checkedArray , setFilter, setSort, setIsLogged ) => {
     fetch(`${import.meta.env.VITE_EXCHANGE_APP_API_URL}/transactions/filtered`, {
         method: 'POST',
         headers: {'Content-type': 'application/json'},
@@ -11,17 +11,24 @@ const handleFilterSubmit = ( checkedArray , setFilter, setSort ) => {
     })
     .then(response => response.json())
     .then(data => {
-        setFilter(data.res.transactions);
+        if(data.errorMessage){
+            alert(data.errorMessage);
+        } else if(data.expiredToken && data.expiredToken === true){
+            alert('Token expired');
+            setIsLogged(null);
+        } else if(data.res.transactions){
+            setFilter(data.res.transactions);
+        }
     })
     .catch((e)=>{
-        console.log('Error fetching data');
+        alert('Error fetching data');
     })
     .finally(()=>{
         setSort(null);
     })
 }
 
-const Filter = ({currencies, setTransactions, setIsSorted}) => {
+const Filter = ({currencies, setTransactions, setIsSorted, setIsLogged}) => {
     return(
         <>
             <div className="m-5 flex justify-around">
@@ -90,7 +97,7 @@ const Filter = ({currencies, setTransactions, setIsSorted}) => {
                                     if(checkedElemenets.length)request.type = checkedElemenets;
 
                                     if(Object.keys(request).length){
-                                        handleFilterSubmit(request, setTransactions, setIsSorted);
+                                        handleFilterSubmit(request, setTransactions, setIsSorted, setIsLogged);
                                     } else {
                                         alert('Unspecified filter parametars')
                                     }

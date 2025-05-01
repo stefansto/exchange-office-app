@@ -45,12 +45,17 @@ function App() {
         .then(data => {
           if(data.expiredToken){
             setIsLogged(null);
-          } else {
+          } else if(data.errorMessage){
+            alert(data.errorMessage);
+            setIsLogged(null);
+          } else if(data.res.currencies){
             setMoney(data.res.currencies);
+          } else {
+            throw Error;
           }
         })
         .catch((e)=>{
-          console.log('Error fetching data');
+          console.log('Error fetching currencies!');
         })
         .finally(()=>{
           setMoneyLoading(false);
@@ -67,12 +72,17 @@ function App() {
         .then(data => {
           if(data.expiredToken){
             setIsLogged(null);
-          } else {
+          } else if(data.errorMessage){
+            alert(data.errorMessage);
+            setIsLogged(null);
+          } else if(data.res.transactions){
             setTransactions(data.res.transactions);
+          } else {
+            throw Error;
           }
         })
         .catch((e)=>{
-          console.log('Error fetching data');
+          alert('Error fetching transactions!');
         })
         .finally(() => {
           setTransactionsLoading(false);

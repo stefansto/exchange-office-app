@@ -14,8 +14,10 @@ const handleLogin = (username, password, set) => {
         .then(data => {
             if(data.user){
                 set(data.user);
+            } else if(data.errorMessage){
+                alert(data.errorMessage);
             } else {
-                alert('Invalid credentials');
+                throw Error;
             }
         })
         .catch((e)=>{
