@@ -1,6 +1,6 @@
 import React from 'react';
 
-const handleLogin = (username, password, set) => {
+const handleLogin = (username, password, setLogin, setRole) => {
     fetch(`${import.meta.env.VITE_EXCHANGE_APP_API_URL}/login`, {
         method: 'POST',
         headers: {'Content-type': 'application/json'},
@@ -13,7 +13,8 @@ const handleLogin = (username, password, set) => {
         .then(response => response.json())
         .then(data => {
             if(data.user){
-                set(data.user);
+                setRole(data.role);
+                setLogin(data.user);
             } else if(data.errorMessage){
                 alert(data.errorMessage);
             } else {
@@ -37,7 +38,7 @@ const Login = (props) => {
                     onClick={(e)=>{
                         e.preventDefault();
                         if(/[\w\.]{4,16}/.test(document.getElementById('user').value) && /[\w\.]{4,16}/.test(document.getElementById('pass').value)){
-                            handleLogin(document.getElementById('user').value, document.getElementById('pass').value, props.login);
+                            handleLogin(document.getElementById('user').value, document.getElementById('pass').value, props.setLogin, props.setRole);
                         } else {
                             alert('Invalid input');
                         }

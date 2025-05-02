@@ -8,10 +8,13 @@ import Output from './components/Output/Output.jsx';
 import Exchange from './components/Exchange/Exchange.jsx';
 import Modal from './components/Modal/Modal.jsx';
 import Transactions from './components/Transactions/Transactions.jsx';
+import AdminPanel from './components/AdminPanel/AdminPanel.jsx';
 
 
 function App() {
   const [isLogged, setIsLogged] = useState(null);
+  const [userRole, setUserRole] = useState(null);
+  const [adminPanel, setAdminPanel] = useState(false);
 
   const [openExchange, setOpenExchange] = useState(false);
   const [openImport, setOpenImport] = useState(false);
@@ -30,10 +33,22 @@ function App() {
   if(!isLogged) {
     return(
       <div className='pt-20 justify-center flex'>
-        <Login login={(x)=>setIsLogged(x)} />
+        <Login 
+          setLogin={(x)=>setIsLogged(x)}
+          setRole={(x)=>setUserRole(x)}
+        />
       </div>
     );
-  } else {
+  } else if(adminPanel === true){
+    return (
+      <>
+        <AdminPanel
+          closeAdminPanel={()=>{setAdminPanel(false)}}
+          userRole={userRole}
+        />
+      </>
+    );
+  } else if(isLogged){
     if(!money && !moneyLoading){
       setMoneyLoading(true);
       fetch(`${import.meta.env.VITE_EXCHANGE_APP_API_URL}/currencies`, {
@@ -95,7 +110,14 @@ function App() {
             clickExch={()=>setOpenExchange(true)}
             clickInput={()=>setOpenImport(true)}
             clickOutput={()=>setOpenOutput(true)}
-            clickLogout={()=>{setMoney(null); setTransactions(null); setIsLogged(null);}}
+            clickLogout={()=>{
+              setMoney(null);
+              setTransactions(null);
+              setIsLogged(null);
+              setUserRole(null);
+            }}
+            userRole={userRole}
+            openAdminPanel={()=>{setAdminPanel(true)}}
           />
         </div>
 
