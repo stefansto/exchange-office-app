@@ -30,6 +30,8 @@ function App() {
 
   const [error, setError] = useState(false);
 
+  const [users, setUsers] = useState(null);
+
   if(!isLogged) {
     return(
       <div className='pt-20 justify-center flex'>
@@ -45,6 +47,8 @@ function App() {
         <AdminPanel
           closeAdminPanel={()=>{setAdminPanel(false)}}
           userRole={userRole}
+          users={users}
+          setUsers={(x)=>{setUsers(x)}}
         />
       </>
     );
