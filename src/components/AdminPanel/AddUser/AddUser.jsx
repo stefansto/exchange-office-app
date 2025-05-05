@@ -1,6 +1,6 @@
 import React from "react";
 
-const handleAddUser = (reqRole) => {
+const handleAddUser = (reqRole, setUsers) => {
     let username = document.getElementById('usernameAdd').value;
     let password = document.getElementById('passwordAdd').value;
     let admin = document.getElementById('adminrole').checked;
@@ -30,31 +30,44 @@ const handleAddUser = (reqRole) => {
         .catch((e)=>{
             alert('Server error, please try again later!');
         })
+        .finally(()=>{
+            setUsers(null);
+            document.getElementById('usernameAdd').value = '';
+            document.getElementById('passwordAdd').value = '';
+            document.getElementById('adminrole').checked = false;
+        })
     } else {
         alert('Invalid input!');
     }
 }
 
-const AddUser = ({userRole}) => {
+const AddUser = ({userRole, setUsers}) => {
     return(
-        <>
-            <h1>Add A New User</h1>
-            <div>
-                <label htmlFor="usernameAdd">Username:</label>
-                <input type="text" id="usernameAdd"/>
+        <div className="border rounded-xl w-full min-h-50 bg-gray-950 pb-2">
+            <div className="w-full h-8 text-center mt-3 text-xl">
+                <h1>Add A New User</h1>
             </div>
-            <div>
-                <label htmlFor="passwordAdd">Password:</label>
-                <input type="password" id="passwordAdd"/>
+            <div className="w-full min-h-50">
+                <div className="w-full h-15 flex justify-center p-2">
+                    <input className='w-60 text-center border border-gray-700 focus:border rounded-xl' type="text" id="usernameAdd" placeholder="Username"/>
+                </div>
+                <div className="w-full h-15 flex justify-center p-2">
+                    <input className='w-60 text-center border border-gray-700 focus:border rounded-xl' type="password" id="passwordAdd" placeholder="Password"/>
+                </div>
+                <div className="w-full h-10 flex justify-center items-center">
+                    <label htmlFor="adminrole" className="mr-4">Admin?</label>
+                    <input type="checkbox" name="" id="adminrole" />
+                </div>
+                <div className="w-full h-15 flex justify-center">
+                    <input
+                        type="button"
+                        value="Add User"
+                        onClick={()=>{handleAddUser(userRole, setUsers)}}
+                        className='w-60 p-2 m-2 border transition bg-blue-950 hover:bg-blue-500 rounded-xl cursor-pointer'
+                    />
+                </div>
             </div>
-            <div>
-                <label htmlFor="adminrole">Admin?</label>
-                <input type="checkbox" name="" id="adminrole" />
-            </div>
-            <div>
-                <input type="button" value="Add User" onClick={()=>{handleAddUser(userRole)}} />
-            </div>
-        </>
+        </div>
     );
 }
 

@@ -31,6 +31,7 @@ function App() {
   const [error, setError] = useState(false);
 
   const [users, setUsers] = useState(null);
+  const [changeUserForm, setChangeUserForm] = useState(null);
 
   if(!isLogged) {
     return(
@@ -45,10 +46,12 @@ function App() {
     return (
       <>
         <AdminPanel
-          closeAdminPanel={()=>{setAdminPanel(false)}}
+          closeAdminPanel={()=>{setAdminPanel(false); setUsers(null)}}
           userRole={userRole}
           users={users}
           setUsers={(x)=>{setUsers(x)}}
+          changeUserForm={changeUserForm}
+          setChangeUserForm={(x)=>setChangeUserForm(x)}
         />
       </>
     );
