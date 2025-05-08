@@ -1,71 +1,11 @@
 import React from "react";
+import fetchUsers from "../../../utils/fetchUsers";
+import handleChangeUserStatus from "../../../utils/handleChangeUserStatus";
+import handleChangeUser from "../../../utils/handleChangeUser";
 
-const fetchUsers = (setUsers, userRole) => {
-    fetch(`${import.meta.env.VITE_EXCHANGE_APP_API_URL}/admin/fetchusers`, {
-        method: 'POST',
-        headers: {'Content-type': 'application/json'},
-        credentials: 'include',
-        body: JSON.stringify({reqRole:userRole})
-    })
-    .then(response => response.json())
-    .then(data => {
-        setUsers(data);
-    })
-    .catch((e)=>{
-        console.log('Error fetching users!');
-    })
-}
-
-const handleChangeActive = (username, status, resetTableFunction, userRole) => {
-    fetch(`${import.meta.env.VITE_EXCHANGE_APP_API_URL}/admin/activateuser`, {
-        method: 'POST',
-        headers: {'Content-type': 'application/json'},
-        credentials: 'include',
-        body: JSON.stringify({reqRole:userRole, username: username, status: status})
-    })
-    .then(response => response.json())
-    .then(data => {
-        if(data.message){
-            alert(data.message);
-            resetTableFunction(null);
-        } else if(data.errorMessage){
-            alert(data.errorMessage);
-        } else {
-            throw Error;
-        }
-    })
-    .catch((e)=>{
-        console.log('Error changing status!');
-    })
-}
-
-const handleChangeUser = (username, password, role, resetTableFunction, userRole, setChangeUserForm) => {
-    fetch(`${import.meta.env.VITE_EXCHANGE_APP_API_URL}/admin/changeuser`, {
-        method: 'POST',
-        headers: {'Content-type': 'application/json'},
-        credentials: 'include',
-        body: JSON.stringify({reqRole:userRole, username: username, newPassword: password, newRole: role})
-    })
-    .then(response => response.json())
-    .then(data => {
-        if(data.message){
-            alert(data.message);
-            resetTableFunction(null);
-            setChangeUserForm(null);
-        } else if(data.errorMessage){
-            alert(data.errorMessage);
-        } else {
-            throw Error;
-        }
-    })
-    .catch((e)=>{
-        console.log('Error changing user data!');
-    })
-}
-
-const ChangeUser = ({ users, setUsers, userRole, changeUserForm, setChangeUserForm }) => {
+const ChangeUser = ({ users, setUsers, changeUserForm, setChangeUserForm }) => {
     if(users === null){
-        fetchUsers(setUsers, userRole);
+        fetchUsers(setUsers);
     } else {
         if(changeUserForm === null){
             return(
@@ -84,7 +24,7 @@ const ChangeUser = ({ users, setUsers, userRole, changeUserForm, setChangeUserFo
                             </thead>
                             <tbody>
                                 {
-                                    users ?
+                                    users && users.users ?
                                         users.users.map((user, userKey) => {
                                             return(
                                                 <tr key={userKey}>
@@ -94,7 +34,7 @@ const ChangeUser = ({ users, setUsers, userRole, changeUserForm, setChangeUserFo
                                                     <td className="border p-2">
                                                         <button 
                                                             onClick={()=>{
-                                                                handleChangeActive(user.username, !user.active, setUsers, userRole)}}
+                                                                handleChangeUserStatus(user.username, !user.active, setUsers)}}
                                                             className='p-2 m-2 bg-orange-950 w-30 border transition hover:bg-orange-800 rounded-xl cursor-pointer'
                                                         >
                                                             { user.active ? 'Deactivate' : 'Activate'}
@@ -179,7 +119,7 @@ const ChangeUser = ({ users, setUsers, userRole, changeUserForm, setChangeUserFo
 
                                             if(password === passwordConfirm){
                                                 if(/[\w\.]{4,16}/.test(password)){
-                                                    handleChangeUser(username, password, role, setUsers, userRole, setChangeUserForm);
+                                                    handleChangeUser(username, password, role, setUsers, setChangeUserForm);
                                                 } else {
                                                     alert('Invalid input!');
                                                 }

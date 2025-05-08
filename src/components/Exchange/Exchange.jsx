@@ -5,7 +5,7 @@ const Exchange = (props) => {
     let newTransaction = {
         type: "Exchange",
         date: null,
-        cashier: props.user,
+        cashier: props.loggedInUser,
         currencyIn: null,
         currencyInAmmount: null,
         currencyOut: null,
@@ -34,7 +34,7 @@ const Exchange = (props) => {
                     >
                         <option className="block px-4 py-2 text-sm text-white bg-gray-900" id="0" hidden disabled value='defaultSelectValueFrom'>Choose:</option>
                         {
-                            props.curr.map(function(prop, index){
+                            props.currencies.map(function(prop, index){
                                 return <option className="block px-4 py-2 text-sm text-white bg-gray-900" key={index} id={prop.id}>{prop.name} </option>
                             })
                         }
@@ -52,7 +52,7 @@ const Exchange = (props) => {
                     >
                         <option className="block px-4 py-2 text-sm text-white bg-gray-900" hidden disabled value='defaultSelectValueTo'>Choose:</option>
                         {
-                            props.curr.map(function(prop, index){
+                            props.currencies.map(function(prop, index){
                                 return <option className="block px-4 py-2 text-sm text-white bg-gray-900" key={index} id={prop.id}>{prop.name}</option>
                             })
                         }
@@ -120,7 +120,7 @@ const Exchange = (props) => {
                                     alert(data.errorMessage);
                                 } else if(data.expiredToken){
                                     alert('Token expired!');
-                                    props.setIsLogged(null);
+                                    props.setLoggedInUser(null);
                                 } else if(data.message){
                                     alert('Successfully added: ' + newTransaction.currencyInAmmount + ' ' + newTransaction.currencyIn);
                                     props.refreshData();

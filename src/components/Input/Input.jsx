@@ -5,7 +5,7 @@ const Input = (props) => {
     let newTransaction = {
         type: "Input",
         date: null,
-        cashier: props.user,
+        cashier: props.loggedInUser,
         currencyIn: null,
         currencyInAmmount: null,
         currencyOut: null,
@@ -31,7 +31,7 @@ const Input = (props) => {
                 >
                     <option hidden disabled value='selected'>Choose:</option>
                         {
-                            props.curr.map((prop, index) => {
+                            props.currencies.map((prop, index) => {
                                 return <option className='block px-4 py-2 text-sm text-white bg-gray-900' key={index} id={prop.id}>{prop.name}</option>
                             })
                         }
@@ -70,7 +70,7 @@ const Input = (props) => {
                                         alert(data.errorMessage);
                                     } else if(data.expiredToken && data.expiredToken === true){
                                         alert('Token expired');
-                                        props.setIsLogged(null);
+                                        props.setLoggedInUser(null);
                                     } else if(data.message){
                                         alert(data.message);
                                         props.refreshData();

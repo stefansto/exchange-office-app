@@ -1,7 +1,6 @@
 import React from "react";
-import { sortCashier, sortDateTime, sortID, sortInput, sortOutput, sortRate, sortType } from "./transactionSortingFunctions";
 import Filter from "../Filter/Filter";
-
+import { sortCashier, sortDateTime, sortID, sortInput, sortOutput, sortRate, sortType } from "../../utils/transactionSortingFunctions";
 
 const Transactions = (props) => {
     
@@ -16,7 +15,12 @@ const Transactions = (props) => {
     
     return(
         <>
-            <Filter currencies={props.currencies} setTransactions={props.setTransactions} setIsSorted={props.setIsSorted} setIsLogged={props.setIsLogged}/>
+            <Filter
+                currencies={props.currencies}
+                setTransactions={props.setTransactions}
+                setIsSorted={props.setIsSorted}
+                setLoggedInUser={props.setLoggedInUser}
+            />
             <div className='min-h-100'>
                 <div className='flex justify-around mt-10 '>
                     <div className="center flex justify-content w-200 m-2 mb-25">

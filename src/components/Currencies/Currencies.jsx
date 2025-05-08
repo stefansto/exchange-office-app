@@ -1,11 +1,11 @@
 import React from 'react';
 import Currency from '../Currency/Currency.jsx';
 
-const Currencies = (props) => {
+const Currencies = ( {currencies} ) => {
     let currencyArray = null;
-    if(props.curr){
-        currencyArray = props.curr.map((valuta,index) => {
-            return <Currency key={props.curr[index]._id} name={valuta.name} img={valuta.img} ammount={valuta.ammount} />
+    if(currencies){
+        currencyArray = currencies.map((valuta,index) => {
+            return <Currency key={currencies[index]._id} name={valuta.name} img={valuta.img} ammount={valuta.ammount} />
         });
     }
     return(
