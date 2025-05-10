@@ -67,7 +67,7 @@ const ChangeUser = ({ users, setUsers, changeUserForm, setChangeUserForm }) => {
                                 <input
                                     type="password"
                                     id="passwordChange"
-                                    placeholder="Password"
+                                    placeholder="Password(Leave blank to not change)"
                                     className='w-60 p-2 m-2 mt-10 text-center border border-gray-700 focus:border rounded-xl'
                                 />
                             </div>
@@ -118,7 +118,7 @@ const ChangeUser = ({ users, setUsers, changeUserForm, setChangeUserForm }) => {
                                             let username = document.getElementById('hiddenUsername').value;
 
                                             if(password === passwordConfirm){
-                                                if(/[\w\.]{4,16}/.test(password)){
+                                                if(/[\w\.]{4,16}/.test(password) || password === ''){
                                                     handleChangeUser(username, password, role, setUsers, setChangeUserForm);
                                                 } else {
                                                     alert('Invalid input!');
